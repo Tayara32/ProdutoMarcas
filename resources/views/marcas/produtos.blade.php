@@ -19,4 +19,5 @@
 
     </tbody>
 </table>
+    <a href="{{ route('marcas.index') }}" class="btn btn-primary">Voltar</a>
 @endsection

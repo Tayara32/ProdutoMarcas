@@ -18,7 +18,7 @@ class ProdutoController extends Controller
         $buscar = $request['buscar'];
 
         if ($buscar) {
-            $produtos = Produto::where('nome', '=', $buscar)->paginate($qtd);
+            $produtos = Produto::where('descricao', 'like', "%$buscar%")->paginate($qtd);
         } else {
             $produtos = Produto::paginate($qtd);
         }

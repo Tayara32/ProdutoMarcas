@@ -7,16 +7,30 @@
             <button type="submit" class="btn btn-primary">Criar Nova Marca</button>
         </form>
 
+        <!-- Mensagem de Erro/Sucesso -->
         @if(Session::has('mensagem'))
-            <div class="alert alert-{{ Session::get('mensagem')['type'] }} alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="text-center">
-                    {{ Session::get('mensagem')['msg'] }}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning">
+                       <div class="text-center">
+                           {{ Session::get('mensagem')['msg'] }}
+                       </div>
+                    </div>
                 </div>
             </div>
         @endif
+
+        <!-- Formulário de Busca -->
+        <form action="{{ route('marcas.index') }}" method="GET" class="my-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" name="buscar" class="form-control" placeholder="Buscar por nome" value="{{ request('buscar') }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success">Buscar</button>
+                </div>
+            </div>
+        </form>
 
         <table class="table">
             <thead>

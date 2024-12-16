@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marca;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Nette\Utils\Paginator;
@@ -20,7 +21,7 @@ class MarcaController extends Controller
 
 
         if ($buscar) {
-            $marcas = Marca::where('nome', '=', $buscar)->paginate($qtd);
+            $marcas = Marca::where('nome', 'like', "%$buscar%")->paginate($qtd);
         } else {
             $marcas = Marca::paginate($qtd);
         }
@@ -89,32 +90,21 @@ class MarcaController extends Controller
      */
     public function destroy($id)
     {
+        if (Produto::where('marca_id', '=', $id)->count()) {
+            $msg = "Não foi possível excluir a marca. Os produtos com id ("; $produtos = Produto::where('marca_id', '=', $id)->get();
+            foreach ($produtos as $produto) {
+                $msg .= $produto->id . ", ";
+            }
+            $msg .= " ) estão relacionados com a marca.";
 
-        $marca = Marca::findOrFail($id);
-
-       $produtosAssociados = $marca->produtos;
-
-        if ($produtosAssociados->count() > 0) {
-
-            $produtosIds = $produtosAssociados->pluck('id')->join(', ');
-
-            Session::flash('mensagem', [
-                'msg' => "A marca não pode ser excluída porque está associada aos seguintes produtos: $produtosIds.",
-                'type' => 'danger'
-            ]);
-
-
+            Session::flash('mensagem', ['msg'=>$msg]);
             return redirect()->route('marcas.index');
         }
 
-        $marca->delete();
-
-        Session::flash('mensagem', [
-            'msg' => 'Marca excluída com sucesso!',
-            'type' => 'success'
-        ]);
-
+        Marca::find($id)->delete();
         return redirect()->route('marcas.index');
+
+
     }
 
     public function produto($id){

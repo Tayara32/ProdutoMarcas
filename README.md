@@ -72,3 +72,10 @@ Siga os passos abaixo para instalar e configurar o projeto:
 
    Agora, você pode acessar o aplicativo no navegador em [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
+## Imagens do Projeto
+
+### Marcas.Index
+![Marcas.Index](public/img/marcas_index.png)
+
+### Produtos.Index
+![Marcas.Index](public/img/produtos_index.png)

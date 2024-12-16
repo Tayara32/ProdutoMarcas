@@ -6,6 +6,17 @@
 
             <button type="submit" class="btn btn-primary">Criar Novo Produto</button>
         </form>
+        <!-- Formulário de Busca -->
+        <form action="{{ route('produtos.index') }}" method="GET" class="my-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" name="buscar" class="form-control" placeholder="Buscar por descricao" value="{{ request('buscar') }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success">Buscar</button>
+                </div>
+            </div>
+        </form>
 
         <table class="table">
             <thead>
