@@ -10,3 +10,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('produtos', ProdutoController::class);
 Route::resource('marcas', MarcaController::class);
+
+Route::get('/marcas/produtos/{id}', [MarcaController::class, 'produto'])->name('marcas.produtos');

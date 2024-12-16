@@ -49,5 +49,10 @@
 
             </tbody>
         </table>
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                {{ $produtos->links('pagination::bootstrap-4') }}
+            </div>
+        </div>
     </div>
 @endsection

@@ -4,15 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Marca;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Nette\Utils\Paginator;
 
 class MarcaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index( Request $request )
     {
-        $marcas = Marca::all();
+        $qtd = $request['qtd'] ?: 2;
+        $page = $request['page'] ?: 1;
+        $buscar = $request['buscar'];
+
+
+        if ($buscar) {
+            $marcas = Marca::where('nome', '=', $buscar)->paginate($qtd);
+        } else {
+            $marcas = Marca::paginate($qtd);
+        }
+
         return view('marcas.index', compact('marcas'));
 
     }
@@ -75,10 +87,38 @@ class MarcaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $marca = Marca::find($id);
+
+        $marca = Marca::findOrFail($id);
+
+       $produtosAssociados = $marca->produtos;
+
+        if ($produtosAssociados->count() > 0) {
+
+            $produtosIds = $produtosAssociados->pluck('id')->join(', ');
+
+            Session::flash('mensagem', [
+                'msg' => "A marca não pode ser excluída porque está associada aos seguintes produtos: $produtosIds.",
+                'type' => 'danger'
+            ]);
+
+
+            return redirect()->route('marcas.index');
+        }
+
         $marca->delete();
+
+        Session::flash('mensagem', [
+            'msg' => 'Marca excluída com sucesso!',
+            'type' => 'success'
+        ]);
+
         return redirect()->route('marcas.index');
+    }
+
+    public function produto($id){
+        $marca = Marca::find($id);
+        return view('marcas.produtos', compact('marca'));
     }
 }

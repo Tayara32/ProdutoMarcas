@@ -11,9 +11,17 @@ class ProdutoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $produtos = Produto::all();
+        $qtd = $request['qtd'] ?: 2;
+        $page = $request['page'] ?: 1;
+        $buscar = $request['buscar'];
+
+        if ($buscar) {
+            $produtos = Produto::where('nome', '=', $buscar)->paginate($qtd);
+        } else {
+            $produtos = Produto::paginate($qtd);
+        }
         return view('produtos.index', compact('produtos'));
     }
 
